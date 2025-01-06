@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Funcabulary{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/00_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/01_header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/02_footer.css') }}">
+    {% block css %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% endblock %}
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}"> -->
+</head>
+
+<body>
+    {% block header %}
+        {% include 'header.html' %}
+    {% endblock %}
+
+    {% block main %}
+        <main>
+            <section class="features">
+                <div class="feature-card">
+                    <h3>토플 필수 어휘</h3>
+                    <p>시험에 자주 출제되는 핵심 단어 모음을 제공합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>일일 학습 계획</h3>
+                    <p>개인 맞춤형 학습 일정으로 효율적인 학습이 가능합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>학습 분석</h3>
+                    <p>데이터 기반으로 개인 학습 현황을 분석해드립니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>예문 학습</h3>
+                    <p>실전 문맥 속 단어 활용 학습을 통해 이해도를 높입니다.</p>
+                </div>
+            </section>
+        
+            <section class="cards-section">
+                <h2 class="section-tit">오늘의 랜덤 학습 단어</h2>
+                <div class="cards-grid">
+                    {% for word in today %}
+                        <div class="cards-container">
+                            <div class="card">
+                                <div class="front">
+                                    <div class="word-header">
+                                        <h3 class="word-tit">{{ word.word }}</h3>
+                                    </div>
+                                    {% for derivative in word.derivatives %}
+                                        <p class="synonyms">
+                                            <span class="word-pos">{{ derivative.pos }}</span> {{ derivative.word }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                                <div class="back">
+                                    <div class="word-header">
+                                        {% for info in word.details %}
+                                            <h3 class="word-info">
+                                                {{ info.meaning }}
+                                            </h3>
+                                            <p class="synonyms"><span class="word-pos">{{ info.pos }}</span> {{ info.synonyms }}</p>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="word-section">
+                                        {% if word.note %}
+                                            <div class="point-section">
+                                                <span class="tag">Point!</span>
+                                                <p class="word-pos">{{ word.note }}</p>
+                                            </div>
+                                        {% endif %}
+                                        <p class="example">{{ word.example | capitalize() }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            <section class="cta-section">
+                <h2>지금 바로 시작하세요</h2>
+                <p>효율적인 토플 단어 학습을 위한 최적의 솔루션</p>
+                <a href="{{ url_for('views.vocabulary') }}" class="cta-button">무료로 시작하기</a>
+            </section>
+        </main>
+    {% endblock %}
+
+    {% block footer %}
+        {% include 'footer.html' %}
+    {% endblock %}
+
+    {% block js %}
+        <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+.header {
+    background: linear-gradient(to right, #2563eb, #1e40af);
+    color: white;
+    padding: 4rem 1rem;
+    text-align: center;
+}
+
+.header h1{
+    margin-bottom: 1rem;
+}
+
+.header-tit {
+    color: white;
+    text-decoration: none;
+    font-size: 2.5rem;
+}
+
+.header p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.search-container {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+    .header-tit {
+        font-size: 2rem;
+    }
+    .header p {
+        font-size: 1rem;
+    }
+    .search-container input {
+        width: 85%;
+        padding: 0.7rem;
+        border: none;
+        border-radius: 8px;
+        font-size: .8rem;
+    }
+}

@@ -1,0 +1,54 @@
+{% extends 'index.html' %}
+
+{% block title %}
+    Day-{{ day }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/days.css') }}">
+{% endblock %}
+
+
+{% block main %}
+    <section class="cards-section">
+        <h2 class="section-tit">Day {{ d_num }}</h2>
+        <div class="cards-grid">
+            {% for word in words %}
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="front">
+                            <div class="word-header">
+                                <h3 class="word-tit">{{ word.word }}</h3>
+                            </div>
+                            {% for derivative in word.derivatives %}
+                                <p class="synonyms">
+                                    <span class="word-pos">{{ derivative.pos }}</span> {{ derivative.word }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                        <div class="back">
+                            <div class="word-header">
+                                {% for info in word.details %}
+                                    <h3 class="word-info">
+                                        {{ info.meaning }}
+                                    </h3>
+                                    <p class="synonyms"><span class="word-pos">{{ info.pos }}</span> {{ info.synonyms }}</p>
+                                {% endfor %}
+                            </div>
+                            <div class="word-section">
+                                {% if word.note %}
+                                    <div class="point-section">
+                                        <span class="tag">Point!</span>
+                                        <p class="word-pos">{{ word.note }}</p>
+                                    </div>
+                                {% endif %}
+                                <p class="example">{{ word.example | capitalize() }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

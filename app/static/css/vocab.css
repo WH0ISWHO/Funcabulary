@@ -1,0 +1,39 @@
+.days-container{
+    display: grid;
+    /* 5개씩 한 줄에 배치 */
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem;
+}
+
+.days{
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    background: white;
+    color: #2563eb;
+    padding: 2em;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: .5s ease-in-out;
+}
+
+.days:hover{
+    box-shadow: -.01em 0 .5em #2563eb, .01em 0 .1em #2563eb;
+    transform: translateY(-.5em);
+}
+
+
+
+@media (max-width: 1023px){
+    .days-container {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .days-container {
+        grid-template-columns: 1fr;
+    }
+}

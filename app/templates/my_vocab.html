@@ -1,0 +1,44 @@
+{% extends 'index.html' %}
+
+{% block title %}
+    My Vocabulary
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vocab.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_vocab.css') }}">
+{% endblock %}
+
+{% block main %}
+    <main>
+        <section class="cards-section">
+            <h2 class="section-tit">My Vocabulary</h2>
+            <div class="my-cards-container">
+                <form class="word-input-form" id="wordForm">
+                    <div class="inputs">
+                        <input type="text" id="word" placeholder="Word" required>
+                        <input type="text" id="meaning" placeholder="Mean" required>
+                    </div>
+                    <div class="btn">
+                        <button type="submit" id="add">Add</button>
+                        <button id="remove-all">Remove All</button>
+                        <button id="save-words">Save to File</button>
+                    </div>
+                </form>
+                <ul id="wordList"></ul>
+                
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
+
+
+{% block footer %}
+    {% include 'footer.html' %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{ url_for('static', filename='js/my_vocab.js') }}"></script>
+{% endblock %}
