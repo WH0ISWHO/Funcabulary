@@ -1,7 +1,5 @@
 from flask import Blueprint, render_template, redirect, request, url_for, jsonify
-
-from .days import days
-# from .models import Word
+from .models import *
 
 views_bp = Blueprint('views', __name__)
 
@@ -11,23 +9,29 @@ import random
 def home():
     today = []
 
+    num_days = db.session.query(Day).count()
+
     while len(today) < 3:
-        num_4_day = random.randrange(1, len(days)) # idx of date(1 ~ 30)
-        words = days[f'day{num_4_day}']
+        num_4_day = random.randrange(1, num_days) # idx of date(1 ~ 30)
+        words = Word.query.filter_by(day_id = num_4_day).all()
 
-        num_4_word = random.randrange(1, len(words)) # idx of word (random word)
-        today_word = words[num_4_word]
+        if not words:
+            continue
 
-        if today_word not in today:
-            today.append(today_word)
+        random_word = random.choice(words)
+
+        # prevent duplication
+        if random_word not in today:
+            today.append(random_word)
 
     return render_template('index.html', today=today)
 
 
 
-@views_bp.route('/vocabulary')
+@views_bp.route('/funcabulary')
 def vocabulary():
-    num = [x for x in range(30)]
+    days = db.session.query(Day).count()
+    num = [x for x in range(days)]
     return render_template('vocab.html', days=num)
 
 
@@ -38,29 +42,19 @@ def add_word():
 
 
 
-@views_bp.route('/vocabulary/day<int:d_num>')
+@views_bp.route('/funcabulary/day<int:d_num>')
 def day(d_num):
+    day = Day.query.filter_by(id=d_num).first()
+
+    if not day:
+        return "<h1>Day not found!</h1>", 404
+
     # day에 맞는 영단어 가져오기
-    words = days[f'day{d_num}']
+    words = Word.query.filter_by(day_id = d_num).all()
     return render_template(f'days.html', words=words, d_num=d_num)
 
 
 
-@views_bp.route('/vocabulary/myvocabulary', methods=['GET', 'POST'])
+@views_bp.route('/funcabulary/myvocabulary', methods=['GET', 'POST'])
 def my_vocab():
     return render_template('my_vocab.html')
-
-
-
-
-# import requests
-# @views_bp.route('/api/search', methods=['GET'])
-# def search():
-#     url = 'https://glosbe.com/gapi/translate?from=eng&dest=kor&format=json&pretty=true&phrase=text'
-#     response = requests.get(url)
-
-#     if response.status_code == 200:
-#         data = response.json()
-#         return jsonify(data)
-#     else:
-#         return jsonify({"error": "failed"})

@@ -1,5 +1,8 @@
 __pycache__/
 env/
+db/
 .env
 
 days.py
+db.py
+db.txt

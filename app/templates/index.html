@@ -52,7 +52,7 @@
                                     </div>
                                     {% for derivative in word.derivatives %}
                                         <p class="synonyms">
-                                            <span class="word-pos">{{ derivative.pos }}</span> {{ derivative.word }}
+                                            <span class="word-pos">{{ derivative.pos.pos }}</span> {{ derivative.word }}
                                         </p>
                                     {% endfor %}
                                 </div>
@@ -62,7 +62,7 @@
                                             <h3 class="word-info">
                                                 {{ info.meaning }}
                                             </h3>
-                                            <p class="synonyms"><span class="word-pos">{{ info.pos }}</span> {{ info.synonyms }}</p>
+                                            <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
                                         {% endfor %}
                                     </div>
                                     <div class="word-section">

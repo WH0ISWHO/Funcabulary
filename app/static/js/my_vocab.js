@@ -84,22 +84,27 @@ class Vocabulary {
         const wordItems = document.querySelectorAll('.word-item');
         const wordsData = [];
 
-        // extract words and meanings from the word list
-        wordItems.forEach(item => {
-            const word = item.querySelector('.card-front').textContent;
-            const meaning = item.querySelector('.card-back').textContent;
-            wordsData.push(`${word}: ${meaning}`);
-        });
 
-        // create a file and download it
-        const blob = new Blob([wordsData.join('\n')], { type: 'text/plain' });
-        const a = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        a.href = url;
-        a.download = 'wordList.txt';
-        a.click();
+        // Check if there are word items and that it's not empty
+        if (wordItems.length > 0) {
+            // extract words and meanings from the word list
+            wordItems.forEach(item => {
+                const word = item.querySelector('.card-front').textContent;
+                const meaning = item.querySelector('.card-back').textContent;
+                wordsData.push(`${word}: ${meaning}`);
+            });
+            // create a file and download it
+            const blob = new Blob([wordsData.join('\n')], { type: 'text/plain' });
+            const a = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            a.href = url;
+            a.download = 'wordList.txt';
+            a.click();
 
-        URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url);
+        } else {
+            alert("You must insert a single card");
+        }
     }
 }
 
