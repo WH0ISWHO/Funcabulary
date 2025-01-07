@@ -2,7 +2,10 @@ __pycache__/
 env/
 db/
 .env
+instance/
 
+*.db
+*.pyc
 days.py
 db.py
 db.txt
