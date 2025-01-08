@@ -40,7 +40,7 @@
                                 {% if word.note %}
                                     <div class="point-section">
                                         <span class="tag">Point!</span>
-                                        <p class="word-pos">{{ word.note }}</p>
+                                        <p class="word-pos">{{ word.note.replace('\n', '<br>') | safe }}</p>
                                     </div>
                                 {% endif %}
                                 <p class="example">{{ word.example | capitalize() }}</p>

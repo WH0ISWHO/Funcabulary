@@ -3,6 +3,7 @@ from . import db
 
 def insert_data(days):
     pos_dict = ["n.", "v.", "adj.", "adv.", "pron.", "prep.", "conj.", "int.", "phr."]
+    added_words = []
 
     # insert POS data
     existing_pos = {pos.pos for pos in POS.query.all()}
@@ -17,13 +18,18 @@ def insert_data(days):
     db.session.commit()
 
     # insert word, detail, derivative
-    for day_name, word_list in days.items():  # days.items() returns (key, value)
-        day = Day.query.filter_by(id=int(day_name)).first()
+    for day_num, word_list in days.items():  # days.items() returns (key, value)
+        day = Day.query.filter_by(id=int(day_num)).first()
         if not day:
-            print(f"Error: Day{day_name} not found. Skipping...")
+            print(f"Error: Day{day_num} not found. Skipping...")
             continue
 
         for word_data in word_list:
+            existing_word = Word.query.filter_by(day_id=day.id, word=word_data["word"]).first()
+            if existing_word:
+
+                continue
+
             word = Word(
                 day_id=day.id,
                 word=word_data["word"],
@@ -32,18 +38,23 @@ def insert_data(days):
             )
             db.session.add(word)
             db.session.flush()  # flush for word id
+            added_words.append(word_data["word"])
 
             # detail
             for detail_data in word_data.get("details", []):
                 pos = POS.query.filter_by(pos=detail_data["pos"]).first()
                 if not pos:
-                    print(f"Error: POS {detail_data['pos']} not found. Skipping detail...")
+                    continue
+
+                existing_detail = Detail.query.filter_by(
+                    word_id=word.id, pos_id=pos.id, meaning=detail_data["meaning"]).first()
+                if existing_detail:
                     continue
 
                 detail = Detail(
                     word_id=word.id,
                     pos_id=pos.id,
-                    synonyms=detail_data.get("synonyms"),
+                    synonyms=detail_data["synonyms"],
                     meaning=detail_data["meaning"]
                 )
                 db.session.add(detail)
@@ -52,7 +63,11 @@ def insert_data(days):
             for derivative_data in word_data.get("derivatives", []):
                 pos = POS.query.filter_by(pos=derivative_data["pos"]).first()
                 if not pos:
-                    print(f"Error: POS {derivative_data['pos']} not found. Skipping derivative...")
+                    continue
+
+                existing_derivative = Derivative.query.filter_by(
+                    word_id=word.id, pos_id=pos.id, word=derivative_data["word"]).first()
+                if existing_derivative:
                     continue
 
                 derivative = Derivative(
@@ -62,4 +77,18 @@ def insert_data(days):
                 )
                 db.session.add(derivative)
 
-        db.session.commit()  # commit word, detail, derivative data to db
+        db.session.commit()  # ensure all data is committed at once
+
+    print(f"\nData insertion complete!\nNewly added words ({len(added_words)}):")
+    print(", ".join(added_words))
+
+
+
+def delete_data_by_day(x):
+    day = Day.query.filter_by(id=int(x)).first()
+    if day:
+        db.session.delete(day)
+        db.session.commit()
+        print("Deleted!")
+    else:
+        print("Data already exists. Skipping insertion.")

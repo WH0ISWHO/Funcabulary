@@ -5,7 +5,7 @@ class Day(db.Model):
     __tablename__ = 'days'
     id = db.Column(db.Integer, primary_key=True)
     # 관계 설정: 하나의 Day에는 여러 Word가 있을 수 있음
-    words = db.relationship('Word', backref='day', lazy=True)
+    words = db.relationship('Word', backref='day', cascade='all, delete', lazy=True)
 
 # words
 class Word(db.Model):
@@ -16,8 +16,8 @@ class Word(db.Model):
     example = db.Column(db.Text, nullable=True)
     note = db.Column(db.Text, nullable=True)
 
-    details = db.relationship('Detail', backref='word', lazy=True)
-    derivatives = db.relationship('Derivative', backref='parent_word', lazy=True)
+    details = db.relationship('Detail', backref='word', cascade='all, delete', lazy=True)
+    derivatives = db.relationship('Derivative', backref='parent_word', cascade='all, delete', lazy=True)
 
 # part of speech
 class POS(db.Model):
