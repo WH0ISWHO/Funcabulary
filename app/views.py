@@ -32,13 +32,8 @@ def home():
 def vocabulary():
     days = db.session.query(Day).count()
     num = [x for x in range(days)]
+    print(num)
     return render_template('vocab.html', days=num)
-
-
-
-@views_bp.route('/addWord')
-def add_word():
-    return render_template('my_vocab.html')
 
 
 
@@ -48,6 +43,8 @@ def day(d_num):
 
     if not day:
         return "<h1>Day not found!</h1>", 404
+    
+    print(d_num)
 
     # day에 맞는 영단어 가져오기
     words = Word.query.filter_by(day_id = d_num).all()
