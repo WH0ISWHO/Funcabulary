@@ -50,19 +50,23 @@
                                     <div class="word-header">
                                         <h3 class="word-tit">{{ word.word }}</h3>
                                     </div>
-                                    {% for derivative in word.derivatives %}
-                                        <p class="synonyms">
-                                            <span class="word-pos">{{ derivative.pos.pos }}</span> {{ derivative.word }}
-                                        </p>
-                                    {% endfor %}
+                                    <div class="word-main">
+                                        {% for derivative in word.derivatives %}
+                                            <p class="synonyms">
+                                                <span class="word-pos">{{ derivative.pos.pos }}</span> {{ derivative.word }}
+                                            </p>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                                 <div class="back">
                                     <div class="word-header">
                                         {% for info in word.details %}
-                                            <h3 class="word-info">
-                                                {{ info.meaning }}
-                                            </h3>
-                                            <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
+                                            <div class="word-header-wrap">
+                                                <h3 class="word-info">
+                                                    {{ info.meaning }}
+                                                </h3>
+                                                <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
+                                            </div>
                                         {% endfor %}
                                     </div>
                                     <div class="word-section">
