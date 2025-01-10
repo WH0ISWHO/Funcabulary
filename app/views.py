@@ -8,7 +8,6 @@ import random
 @views_bp.route('/')
 def home():
     today = []
-
     num_days = db.session.query(Day).count()
 
     while len(today) < 3:
@@ -32,7 +31,6 @@ def home():
 def vocabulary():
     days = db.session.query(Day).count()
     num = [x for x in range(days)]
-    print(num)
     return render_template('vocab.html', days=num)
 
 
@@ -43,8 +41,6 @@ def day(d_num):
 
     if not day:
         return "<h1>Day not found!</h1>", 404
-    
-    print(d_num)
 
     # day에 맞는 영단어 가져오기
     words = Word.query.filter_by(day_id = d_num).all()
