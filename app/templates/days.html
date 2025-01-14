@@ -47,7 +47,7 @@
                                         <p class="word-pos">{{ word.note.replace('\n', '<br>') | safe }}</p>
                                     </div>
                                 {% endif %}
-                                <p class="example">{{ word.example | capitalize() }}</p>
+                                <p class="example">{{ word.example.replace('\n', '<br>') | safe}}</p>
                             </div>
                         </div>
                     </div>
