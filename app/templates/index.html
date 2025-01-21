@@ -11,7 +11,6 @@
     {% block css %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     {% endblock %}
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}"> -->
 </head>
 
 <body>
@@ -31,8 +30,8 @@
                     <p>개인 맞춤형 학습 일정으로 효율적인 학습이 가능합니다.</p>
                 </div>
                 <div class="feature-card">
-                    <h3>학습 분석</h3>
-                    <p>데이터 기반으로 개인 학습 현황을 분석해드립니다.</p>
+                    <h3>체계적인 동의어 학습</h3>
+                    <p>기출 단어를 중심으로 한 동의어군을 통한 단어 학습으로, 단기간에 보다 효과적인 어휘 학습이 가능합니다.</p>
                 </div>
                 <div class="feature-card">
                     <h3>예문 학습</h3>
@@ -49,13 +48,14 @@
                                 <div class="front">
                                     <div class="word-header">
                                         <h3 class="word-tit">{{ word.word }}</h3>
-                                    </div>
-                                    <div class="word-main">
                                         {% for derivative in word.derivatives %}
                                             <p class="synonyms">
                                                 <span class="word-pos">{{ derivative.pos.pos }}</span> {{ derivative.word }}
                                             </p>
                                         {% endfor %}
+                                    </div>
+                                    <div class="word-main">
+                                        
                                     </div>
                                 </div>
                                 <div class="back">
@@ -63,20 +63,24 @@
                                         {% for info in word.details %}
                                             <div class="word-header-wrap">
                                                 <h3 class="word-info">
-                                                    {{ info.meaning }}
+                                                    {% if loop.length > 1 %}
+                                                        <span class="meaning-count">{{ loop.index }}.</span> {{ info.meaning }}
+                                                    {% else %}
+                                                        {{ info.meaning }}
+                                                    {% endif %}
                                                 </h3>
                                                 <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
+                                                <p class="example">{{ info.example.replace('\n', '<br>') | safe}}</p>
                                             </div>
                                         {% endfor %}
                                     </div>
                                     <div class="word-section">
                                         {% if word.note %}
                                             <div class="point-section">
-                                                <span class="tag">Point!</span>
+                                                <div class="point-tit"><span class="tag">Point!</span></div>
                                                 <p class="word-pos">{{ word.note.replace('\n', '<br>') | safe }}</p>
                                             </div>
                                         {% endif %}
-                                        <p class="example">{{ word.example | capitalize() }}</p>
                                     </div>
                                 </div>
                             </div>

@@ -9,3 +9,5 @@ instance/
 days.py
 db.py
 db.txt
+aa.py
+.DS_Store

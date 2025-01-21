@@ -27,13 +27,11 @@ def insert_data(days):
         for word_data in word_list:
             existing_word = Word.query.filter_by(day_id=day.id, word=word_data["word"]).first()
             if existing_word:
-
                 continue
 
             word = Word(
                 day_id=day.id,
                 word=word_data["word"],
-                example=word_data.get("example"),
                 note=word_data.get("note")
             )
             db.session.add(word)
@@ -55,7 +53,8 @@ def insert_data(days):
                     word_id=word.id,
                     pos_id=pos.id,
                     synonyms=detail_data["synonyms"],
-                    meaning=detail_data["meaning"]
+                    meaning=detail_data["meaning"],
+                    example=detail_data.get("example")
                 )
                 db.session.add(detail)
 
@@ -91,4 +90,4 @@ def delete_data_by_day(x):
         db.session.commit()
         print("Deleted!")
     else:
-        print("Data already exists. Skipping insertion.")
+        print("Data does not exist. Skipping deletion.")

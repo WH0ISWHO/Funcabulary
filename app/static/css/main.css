@@ -88,12 +88,24 @@
     box-shadow: -.01em 0 .5em #2563eb, .01em 0 .1em #2563eb;
 }
 
-.word-header {
+.front .word-header {
     border-bottom: 2px solid #e5e7eb;
     padding-bottom: .5rem;
     margin-bottom: .5rem;
     display: flex;
     flex-direction: column;
+}
+
+.word-header-wrap{
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.word-header-wrap:last-child{
+    border: unset;
+    padding: unset;
+    margin: unset;
 }
 
 .word-tit {
@@ -125,7 +137,6 @@
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     font-size: 0.9rem;
-    margin-right: 0.5rem;
 }
 
 .word-info {
@@ -133,19 +144,29 @@
     color: #2563eb;
 }
 
+.meaning-count{
+    color: rgb(0, 0, 0);
+}
+
 .point-section{
-    padding-bottom: .5rem;
-    margin-bottom: .5rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem 0 0;
+    margin: 1rem 0 0;
+    border-top: 1px solid #e5e7eb;
+}
+
+.point-tit{
+    display: flex;
+    justify-content: center;
+    margin: .5rem 0 .2rem;
 }
 
 .example {
     color: #6b7280;
     font-style: italic;
     font-size: .9rem;
-    /* padding-bottom: 1rem;
-    margin-bottom: .5rem;
-    border-bottom: 1px solid #e5e7eb; */
+    border-top: 2px dashed #e5e7eb;
+    padding-top: .5rem;
+    margin-top: .5rem;
 }
 
 .cards-container:hover {

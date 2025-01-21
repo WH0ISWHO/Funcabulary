@@ -13,7 +13,6 @@ class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     day_id = db.Column(db.Integer, db.ForeignKey('days.id'), nullable=False)  # connect to Day
     word = db.Column(db.String(100), nullable=False)
-    example = db.Column(db.Text, nullable=True)
     note = db.Column(db.Text, nullable=True)
 
     details = db.relationship('Detail', backref='word', cascade='all, delete', lazy=True)
@@ -35,6 +34,7 @@ class Detail(db.Model):
     pos_id = db.Column(db.Integer, db.ForeignKey('pos.id'), nullable=False)
     synonyms = db.Column(db.String(100), primary_key=True, nullable=True)
     meaning = db.Column(db.String(100), nullable=False)
+    example = db.Column(db.Text, nullable=True)
     # 복합 기본키 설정
     __table_args__ = (
         db.PrimaryKeyConstraint('word_id', 'synonyms'),
