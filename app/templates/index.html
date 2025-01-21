@@ -70,7 +70,7 @@
                                                     {% endif %}
                                                 </h3>
                                                 <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
-                                                <p class="example">{{ info.example.replace('\n', '<br>') | safe}}</p>
+                                                <p class="example">{{ info.example | default('', true) | replace('\n', '<br>') | safe }}</p>
                                             </div>
                                         {% endfor %}
                                     </div>
@@ -78,7 +78,7 @@
                                         {% if word.note %}
                                             <div class="point-section">
                                                 <div class="point-tit"><span class="tag">Point!</span></div>
-                                                <p class="word-pos">{{ word.note.replace('\n', '<br>') | safe }}</p>
+                                                <p class="word-pos">{{ word.note | default('', true) | replace('\n', '<br>') | safe }}</p>
                                             </div>
                                         {% endif %}
                                     </div>

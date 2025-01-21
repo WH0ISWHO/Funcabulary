@@ -44,7 +44,7 @@ def day(d_num):
 
     # day에 맞는 영단어 가져오기
     words = Word.query.filter_by(day_id = d_num).all()
-    return render_template(f'days.html', words=words, d_num=d_num)
+    return render_template('days.html', words=words, d_num=d_num)
 
 
 
