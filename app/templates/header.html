@@ -4,6 +4,9 @@
     </h1>
     <p>체계적인 학습으로 토플 필수 단어를 완벽하게 마스터하세요!</p>
     <div class="search-container">
-        <input type="search" placeholder="단어 검색...">
+        <form action="/search" method="GET" class="search-form">
+            <input type="search" name="q" id="searchBox" placeholder="Search...">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
     </div>
 </header>

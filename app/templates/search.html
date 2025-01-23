@@ -1,0 +1,78 @@
+{% extends "index.html" %}
+
+{% block title %}
+    search/{{ query }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/days.css') }}">
+{% endblock %}
+
+{% block main %}
+
+    {% if results %}
+        <h2 class="result-tit">Search Results for "{{ query }}"</h2>
+        <section class="cards-section">
+            {% for word in results %}
+                <h2 class="section-tit">Day {{ word["day"]}}</h2>
+                <div class="cards-grid">
+                    <div class="cards-container">
+                        <div class="card">
+                            <div class="front">
+                                <div class="word-header">
+                                    <h3 class="word-tit">
+                                        {{ word["word"] }}
+                                        <button class="tts-btn" onclick="Pronunciation(`{{ word['word'] }}`, event)"><img src="{{ url_for('static', filename='img/volume.png') }}" alt="sound-icon" class="vol-img"></button>
+                                    </h3>
+                                    
+                                    {% for derivative in word["derivatives"] %}
+                                        <p class="synonyms">
+                                            <span class="word-pos">{{ derivative["pos"].pos }}</span> {{ derivative["word"] }}
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                                <div class="word-main">
+                                    
+                                </div>
+                            </div>
+                            <div class="back">
+                                <div class="word-header">
+                                    {% for info in word.details %}
+                                        <div class="word-header-wrap">
+                                            <h3 class="word-info">
+                                                {% if loop.length > 1 %}
+                                                    <span class="meaning-count">{{ loop.index }}.</span> {{ info.meaning }}
+                                                {% else %}
+                                                    {{ info.meaning }}
+                                                {% endif %}
+                                            </h3>
+                                            <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
+                                            <p class="example">{{ info.example | replace(word.word, '<b>' + word.word + '</b>') | safe }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="word-section">
+                                    {% if word.note %}
+                                        <div class="point-section">
+                                            <div class="point-tit"><span class="tag">Point!</span></div>
+                                            <p class="word-pos">{{ word.note | default('', true) | replace('\n', '<br>') | safe }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <audio id="player" style="display: none;"></audio>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+    {% else %}
+        <h2 class="result-tit">No results found.</h2>
+    {% endif %}
+
+    <div class="back-btn-area">
+        <a onclick="history.back()" class="cta-button">Back</a>
+    </div>
+{% endblock %}
+

@@ -7,6 +7,7 @@ class Vocabulary {
         this.removeBtn = document.querySelector('#remove-all');
         this.saveBtn = document.querySelector('#save-words');
 
+        this.loadFromLocalStorage();
         this.initialize();
     }
 
@@ -42,7 +43,10 @@ class Vocabulary {
             const removeBtn = document.createElement('button');
             removeBtn.textContent = 'Remove';
             removeBtn.className = 'remove-btn';
-            removeBtn.addEventListener('click', () => li.remove());
+            removeBtn.addEventListener('click', () => {
+                li.remove();
+                this.saveToLocalStorage();
+            });
 
             // append card faces to the card
             card.appendChild(cardFront);
@@ -65,6 +69,8 @@ class Vocabulary {
             this.meaningInput.value = '';
 
             this.wordInput.focus();
+
+            this.saveToLocalStorage();
         } else {
             alert("You must enter both a word and its meaning.");
         }
@@ -78,12 +84,13 @@ class Vocabulary {
         this.wordInput.value = '';
         this.meaningInput.value = '';
         this.wordInput.focus();
+
+        localStorage.removeItem("vocab");
     }
 
     save() {
         const wordItems = document.querySelectorAll('.word-item');
         const wordsData = [];
-
 
         // Check if there are word items and that it's not empty
         if (wordItems.length > 0) {
@@ -105,6 +112,28 @@ class Vocabulary {
         } else {
             alert("You must insert a single card");
         }
+    }
+
+    saveToLocalStorage() {
+        const wordItems = document.querySelectorAll('.word-item');
+        const wordsData = [];
+
+        wordItems.forEach(item => {
+            const word = item.querySelector('.card-front').textContent;
+            const meaning = item.querySelector('.card-back').textContent;
+            wordsData.push({ word, meaning });
+        });
+
+        localStorage.setItem("vocab", JSON.stringify(wordsData)); // save to localStorage
+    }
+
+    loadFromLocalStorage() {
+        const savedWords = JSON.parse(localStorage.getItem("vocab")) || [];
+        savedWords.forEach(data => {
+            this.wordInput.value = data.word;
+            this.meaningInput.value = data.meaning;
+            this.add();
+        });
     }
 }
 

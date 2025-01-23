@@ -18,7 +18,14 @@
                     <div class="card">
                         <div class="front">
                             <div class="word-header">
-                                <h3 class="word-tit">{{ word.word }}</h3>
+                                <h3 class="word-tit">
+                                    <div class="word-tit-container">
+                                        <!-- <span><sup class="synonyms">{{ loop.index }} </sup></span> -->
+                                        {{ word.word }}
+                                    </div>
+                                    <button class="tts-btn" onclick="Pronunciation('{{ word.word }}', event)"><img src="{{ url_for('static', filename='img/volume.png') }}" alt="sound-icon" class="vol-img"></button>
+                                </h3>
+                                
                                 {% for derivative in word.derivatives %}
                                     <p class="synonyms">
                                         <span class="word-pos">{{ derivative.pos.pos }}</span> {{ derivative.word }}
@@ -41,7 +48,7 @@
                                             {% endif %}
                                         </h3>
                                         <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
-                                        <p class="example">{{ info.example | default('', true) | replace('\n', '<br>') | safe }}</p>
+                                        <p class="example">{{ info.example | safe }}</p>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -55,6 +62,7 @@
                             </div>
                         </div>
                     </div>
+                    <audio id="player" style="display: none;"></audio>
                 </div>
             {% endfor %}
         </div>

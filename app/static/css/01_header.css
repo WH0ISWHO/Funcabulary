@@ -26,6 +26,18 @@
     position: relative;
 }
 
+.search-form{
+    display: flex;
+}
+
+.search-btn{
+    min-width: 5%;
+    border-radius: 8px;
+    border: none;
+    margin-left: .5rem;
+    cursor: pointer;
+}
+
 .search-container input {
     width: 100%;
     padding: 1rem;

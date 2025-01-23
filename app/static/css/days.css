@@ -1,3 +1,15 @@
 .cards-container{
     height: 300px;
 }
+
+.result-tit{
+    text-align: center;
+    margin-top: 1rem;
+    color: #1e3a8a;
+}
+
+.back-btn-area{
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
