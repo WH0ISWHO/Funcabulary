@@ -4,6 +4,7 @@ from .models import *
 views_bp = Blueprint('views', __name__)
 
 
+
 import random
 @views_bp.route('/')
 def home():
@@ -23,6 +24,10 @@ def home():
         if random_word not in today:
             today.append(random_word)
 
+    for word in today:
+        for detail in word.details:
+            detail.example = highlight(word.word, detail.example)
+
     return render_template('index.html', today=today)
 
 
@@ -32,7 +37,6 @@ def vocabulary():
     days = db.session.query(Day).count()
     num = [x for x in range(days)]
     return render_template('vocab.html', days=num)
-
 
 
 
@@ -64,9 +68,10 @@ def highlight(word, example):
 
 import os
 from gtts import gTTS
-@views_bp.route('tts')
-def tts():
-    word = request.args.get("word")
+from urllib.parse import quote_plus, unquote
+@views_bp.route('tts_eng')
+def tts_eng():
+    word = request.args.get("word", "eng")
     day = Word.query.filter_by(word=word).first().day_id
 
     if not word:
@@ -80,7 +85,38 @@ def tts():
         tts = gTTS(text=word, lang="en")
         tts.save(file_path)
 
-    return jsonify({"audio_url": f"/static/audio/day{day}/eng/{word}.mp3"})
+    return jsonify({"eng_audio_url": f"/static/audio/day{day}/eng/{word}.mp3"})
+
+
+@views_bp.route('tts_kor')
+def tts_kor():
+    meaning = request.args.get("meaning")
+    if not meaning:
+        return jsonify({"Error": "No meaning provided!"}), 400
+
+    id = Detail.query.filter_by(meaning=meaning).first().word_id
+    day = Word.query.filter_by(id=id).first().day_id
+
+    meaning = unquote(meaning)  # 의미 디코딩
+
+    # 의미에 해당하는 음성 파일을 생성
+    path = os.path.join(os.getcwd(), "app", "static", "audio", f"day{day}", "kor")
+    os.makedirs(path, exist_ok=True)
+
+    file_paths = []
+    file_path = os.path.join(path, f"{meaning}.mp3")
+
+    # 파일이 존재하지 않으면 새로 생성
+    if not os.path.exists(file_path):
+        tts = gTTS(text=meaning, lang="ko")
+        tts.save(file_path)
+
+    file_paths.append(f"/static/audio/day{day}/kor/{meaning}.mp3")
+
+    return jsonify({
+        "kor_audio_urls": file_paths
+    })
+
 
 
 
@@ -90,26 +126,56 @@ def my_vocab():
 
 
 
+from collections import defaultdict
 @views_bp.route('/search', methods=["GET"])
 def search():
-    query = request.args.get('q', '').strip().lower()
+    query = request.args.get('q', '').strip()
     if not query:
         return render_template('search.html', query="", results=[])
-    
+
     search_pattern = f"%{query}%"
+    # search the word from 'words' table
+    words_by_word = Word.query.filter(Word.word.ilike(search_pattern)).all()
+    word_ids_by_word = {word.id for word in words_by_word}
 
-    # 단어 검색 (단어, 품사, 파생어, 뜻, 예문에서 검색)
-    words = Word.query.join(Detail).join(Derivative).filter(
-        (Word.word.ilike(search_pattern)) | (Derivative.word.ilike(search_pattern)) | (Detail.meaning.ilike(search_pattern))).all()
+    # search the meaning from 'details' table and bring its word_id
+    details_by_meaning = Detail.query.filter(Detail.meaning.ilike(search_pattern)).all()
+    word_ids_by_meaning = {detail.word_id for detail in details_by_meaning}
 
-    # JSON 응답 생성
-    results = []
+    # search the derivative from 'derivatives' table and bring its word_id
+    derivatives_by_word = Derivative.query.filter(Derivative.word.ilike(search_pattern)).all()
+    word_ids_by_derivative = {derivative.word_id for derivative in derivatives_by_word}
+
+    # search the pos from 'pos' table by its word_id
+    pos_by_name = POS.query.filter(POS.pos.ilike(search_pattern)).all()
+    pos_ids = {pos.id for pos in pos_by_name}
+
+    # bring word_id from 'details' & 'derivatives' tables by pos_id
+    word_ids_by_pos_detail = {detail.word_id for detail in Detail.query.filter(Detail.pos_id.in_(pos_ids)).all()}
+    word_ids_by_pos_derivative = {derivative.word_id for derivative in Derivative.query.filter(Derivative.pos_id.in_(pos_ids)).all()}
+
+    # combine all word_id
+    all_word_ids = word_ids_by_word | word_ids_by_meaning | word_ids_by_derivative | word_ids_by_pos_detail | word_ids_by_pos_derivative
+
+    if not all_word_ids:
+        return render_template('search.html', query=query, results=[])
+
+    # search 'words', 'details', 'derivatives' searched word_id
+    words = Word.query.filter(Word.id.in_(all_word_ids)).all()
+    details = Detail.query.filter(Detail.word_id.in_(all_word_ids)).all()
+    derivatives = Derivative.query.filter(Derivative.word_id.in_(all_word_ids)).all()
+
+    # group the results
+    grouped_results = defaultdict(list)
+
     for word in words:
-        results.append({
+        grouped_details = [d for d in details if d.word_id == word.id]
+        grouped_derivatives = [d for d in derivatives if d.word_id == word.id]
+
+        grouped_results[word.day_id].append({
             "word": word.word,
-            "day": word.day_id,
-            "derivatives": word.derivatives,
-            "details": word.details,
+            "derivatives": grouped_derivatives,
+            "details": grouped_details,
         })
-    print(results)
+    results = [{"day": day, "words": words} for day, words in sorted(grouped_results.items())]
     return render_template('search.html', query=query, results=results)

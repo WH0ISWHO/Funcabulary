@@ -71,10 +71,12 @@
                                 <div class="front">
                                     <div class="word-header">
                                         <h3 class="word-tit">
-                                            {{ word.word }}
-                                            <button class="tts-btn" onclick="Pronunciation('{{ word.word }}', event)"><img src="{{ url_for('static', filename='img/volume.png') }}" alt="sound-icon" class="vol-img"></button>
+                                            <div class="word-tit-container">
+                                                <!-- <span><sup class="synonyms">{{ loop.index }} </sup></span> -->
+                                                {{ word.word }}
+                                            </div>
+                                            <button class="tts-btn" onclick="Pronunciation_eng('{{ word.word }}', 'eng', event)"><img src="{{ url_for('static', filename='img/volume.png') }}" alt="sound-icon" class="vol-img"></button>
                                         </h3>
-                                        
                                         {% for derivative in word.derivatives %}
                                             <p class="synonyms">
                                                 <span class="word-pos">{{ derivative.pos.pos }}</span> {{ derivative.word }}
@@ -95,9 +97,10 @@
                                                     {% else %}
                                                         {{ info.meaning }}
                                                     {% endif %}
+                                                    <button class="tts-btn" onclick="Pronunciation_kor(`{{ info.meaning }}`, 'kor', event)"><img src="{{ url_for('static', filename='img/volume.png') }}" alt="sound-icon" class="vol-img"></button>
                                                 </h3>
                                                 <p class="synonyms"><span class="word-pos">{{ info.pos.pos }}</span> {{ info.synonyms }}</p>
-                                                <p class="example">{{ info.example | replace(word.word, '<b>' + word.word + '</b>') | safe }}</p>
+                                                <p class="example">{{ info.example | safe }}</p>
                                             </div>
                                         {% endfor %}
                                     </div>
@@ -111,7 +114,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <audio id="player" style="display: none;"></audio>
+                            <audio id="player_eng" style="display: none;"></audio>
+                            <audio id="player_kor" style="display: none;"></audio>
                         </div>
                     {% endfor %}
                 </div>

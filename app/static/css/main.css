@@ -119,6 +119,7 @@
     all: unset;
     display: flex;
     cursor: pointer;
+    float: right;
 }
 
 .vol-img{
@@ -158,6 +159,11 @@
 
 .meaning-count{
     color: rgb(0, 0, 0);
+}
+
+.word-info-tit{
+    display: flex;
+    justify-content: space-between;
 }
 
 .point-section{
