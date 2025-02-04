@@ -30,6 +30,7 @@ function Pronunciation_eng(word, language, event) {
 }
 
 
+
 function Pronunciation_kor(meaning, language, event) {
     event.stopPropagation();
 

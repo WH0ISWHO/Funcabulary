@@ -2,8 +2,8 @@ __pycache__/
 env/
 db/
 .env
-instance/
 
+instance/vocabulary.db
 *.db
 *.pyc
 days.py

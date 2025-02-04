@@ -8,6 +8,11 @@ views_bp = Blueprint('views', __name__)
 import random
 @views_bp.route('/')
 def home():
+    # 봇 차단
+    user_agent = request.headers.get("User-Agent", "").lower()
+    if "python" in user_agent or "pandas" in user_agent or "requests" in user_agent:
+        return jsonify({"error": "Bots are not allowed!"}), 403
+
     today = []
     num_days = db.session.query(Day).count()
 
@@ -42,6 +47,10 @@ def vocabulary():
 
 @views_bp.route('/funcabulary/day<int:d_num>')
 def day(d_num):
+    # 봇 차단
+    user_agent = request.headers.get("User-Agent", "").lower()
+    if "python" in user_agent or "pandas" in user_agent or "requests" in user_agent:
+        return jsonify({"error": "Bots are not allowed!"}), 403
     # day에 맞는 영단어 가져오기
     words = Word.query.filter_by(day_id=d_num).all()
 
@@ -61,14 +70,13 @@ def highlight(word, example):
     pattern = r'\s+'.join(word_patterns) # 단어 사이의 공백도 포함
 
     oup = re.sub(pattern, r'<b>\g<0></b>', example, flags=re.IGNORECASE)
-
     return oup
 
 
 
 import os
 from gtts import gTTS
-from urllib.parse import quote_plus, unquote
+from urllib.parse import unquote
 @views_bp.route('tts_eng')
 def tts_eng():
     word = request.args.get("word", "eng")
@@ -76,7 +84,7 @@ def tts_eng():
 
     if not word:
         return jsonify({"Error": "No word provided!"}), 400
-    
+
     path = os.path.join(os.getcwd(), "app", "static", "audio", f"day{day}", "eng")
     os.makedirs(path, exist_ok=True)
     file_path = os.path.join(path, f"{word}.mp3")
@@ -122,6 +130,10 @@ def tts_kor():
 
 @views_bp.route('/funcabulary/myvocabulary', methods=['GET', 'POST'])
 def my_vocab():
+    # 봇 차단
+    user_agent = request.headers.get("User-Agent", "").lower()
+    if "python" in user_agent or "pandas" in user_agent or "requests" in user_agent:
+        return jsonify({"error": "Bots are not allowed!"}), 403
     return render_template('my_vocab.html')
 
 
@@ -129,6 +141,11 @@ def my_vocab():
 from collections import defaultdict
 @views_bp.route('/search', methods=["GET"])
 def search():
+    # 봇 차단
+    user_agent = request.headers.get("User-Agent", "").lower()
+    if "python" in user_agent or "pandas" in user_agent or "requests" in user_agent:
+        return jsonify({"error": "Bots are not allowed!"}), 403
+
     query = request.args.get('q', '').strip()
     if not query:
         return render_template('search.html', query="", results=[])
