@@ -20,5 +20,17 @@ app = create_app()
 #     else:
 #         print("Data already exists. Skipping insertion.")
 
+
+import os
+db_path = os.path.join("instance", "vocabulary.db")
+
+if not os.path.exists(db_path):
+    with open(db_path, "w") as f:
+        pass
+
+    # DB
+    with app.app_context():
+        db.create_all()
+
 if __name__ == '__main__':
     app.run(debug=True, port=3333)
