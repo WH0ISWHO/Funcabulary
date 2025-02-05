@@ -3,7 +3,7 @@ env/
 db/
 .env
 
-instance/vocabulary.db
+# instance/vocabulary.db
 *.db
 *.pyc
 days.py
