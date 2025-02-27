@@ -91,3 +91,23 @@ def delete_data_by_day(x):
         print("Deleted!")
     else:
         print("Data does not exist. Skipping deletion.")
+
+
+from google import genai
+from google.genai import types
+import os
+def ask(txt):
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+    prompt = f"{txt}\n\n(최대한 짧고 간결하게 한국어로 대답해 주세요.)"
+
+    response = client.models.generate_content(
+        model="gemini-2.0-flash",
+        contents=f"{prompt}",
+        config=types.GenerateContentConfig(
+            max_output_tokens=100,
+            temperature=0.1
+        )
+
+    )
+    return response.text

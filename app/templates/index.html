@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/00_base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/01_header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/02_footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat_bot.css') }}">
     {% block css %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     {% endblock %}
@@ -122,11 +123,16 @@
             </section>
         </main>
     {% endblock %}
+    <button id="chat-btn">
+        <img src="{{ url_for('static', filename='img/main-icons.ico/ms-icon-310x310.png') }}" alt="chat-btn" class="chat-icon">
+    </button>
+    {% include 'chat_bot.html' %}
 
     {% block footer %}
         {% include 'footer.html' %}
     {% endblock %}
 
+    <script src="{{ url_for('static', filename='js/chat_bot.js') }}"></script>
     {% block js %}
         <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     {% endblock %}

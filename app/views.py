@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, url_for, jsonify
 from .models import *
+from .utils import ask
 
 views_bp = Blueprint('views', __name__)
 
@@ -196,3 +197,13 @@ def search():
         })
     results = [{"day": day, "words": words} for day, words in sorted(grouped_results.items())]
     return render_template('search.html', query=query, results=results)
+
+
+
+@views_bp.route('/api/chat', methods=['POST'])
+def chat():
+    user_inp = request.json.get("Message", "").strip()
+
+    ai = ask(user_inp)
+
+    return jsonify({"response": ai})
